@@ -90,16 +90,28 @@ curl http://localhost:3000/api/articles
 # Get platform statistics
 curl http://localhost:3000/api/stats
 
-# Create a new article
+# Create new article
 curl -X POST http://localhost:3000/api/articles \
   -H "Content-Type: application/json" \
   -d '{
     "title": "新知识分享",
     "content": "这是一个改变世界的想法...",
     "category": "创新",
-    "impact": "高"
+    "impact": "高",
+    "author": "Your Name (optional, defaults to 匿名)"
   }'
 ```
+
+### API Request Requirements
+
+**POST /api/articles** requires:
+- `title` (string, required): Article title
+- `content` (string, required): Article content
+- `category` (string, required): Article category
+- `impact` (string, required): Must be either "高" (High) or "关键" (Critical)
+- `author` (string, optional): Author name, defaults to "匿名" (Anonymous) if not provided
+
+All string fields will be trimmed of whitespace. Maximum request body size is 1MB.
 
 ## 🌟 Core Concepts
 

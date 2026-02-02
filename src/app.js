@@ -46,6 +46,7 @@ const IMPACT_LEVELS = {
   HIGH: '高',
   CRITICAL: '关键'
 };
+const VALID_IMPACT_VALUES = [IMPACT_LEVELS.HIGH, IMPACT_LEVELS.CRITICAL];
 
 // Server configuration
 const PORT = process.env.PORT || 3000;
@@ -297,7 +298,10 @@ function handleRequest(req, res) {
                 <p style="margin-bottom: 15px;">开发者可以使用以下 API 来集成知识平台：</p>
                 <div class="api-endpoint">GET /api/articles - 获取所有文章</div>
                 <div class="api-endpoint">GET /api/articles/:id - 获取指定文章</div>
-                <div class="api-endpoint">POST /api/articles - 创建新文章</div>
+                <div class="api-endpoint">POST /api/articles - 创建新文章
+                  <br><small style="margin-left: 20px;">Required fields: title, content, category, impact (高 or 关键)</small>
+                  <br><small style="margin-left: 20px;">Optional: author (defaults to 匿名 if not provided)</small>
+                </div>
                 <div class="api-endpoint">GET /api/stats - 获取平台统计信息</div>
             </div>
             
@@ -384,6 +388,15 @@ function handleRequest(req, res) {
         newArticle.content = newArticle.content.trim();
         newArticle.category = newArticle.category.trim();
         newArticle.impact = newArticle.impact.trim();
+        
+        // Validate impact level
+        if (!VALID_IMPACT_VALUES.includes(newArticle.impact)) {
+          sendJSON(res, 400, { 
+            success: false, 
+            error: `Impact must be one of: ${VALID_IMPACT_VALUES.join(', ')}` 
+          });
+          return;
+        }
         
         newArticle.id = nextId++;
         newArticle.author = newArticle.author?.trim() || '匿名';
