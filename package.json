@@ -1,0 +1,22 @@
+{
+  "name": "shendaoen-transform-world",
+  "version": "1.0.0",
+  "description": "A knowledge-sharing platform that transforms the world through education and collaboration",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node src/app.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "education",
+    "knowledge-sharing",
+    "collaboration",
+    "learning",
+    "transform-world"
+  ],
+  "author": "",
+  "license": "MIT"
+}
