@@ -3,7 +3,7 @@
 > **"知识是改变世界最强大的工具"** | *"Knowledge is the most powerful tool to transform the world"*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D%2018.0.0-brightgreen)](https://nodejs.org/)
 
 ## 🎯 Vision | 愿景
 
@@ -28,7 +28,7 @@ Transform World is an open-source knowledge-sharing platform that democratizes e
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v12.0.0 or higher)
+- Node.js (v18.0.0 or higher - LTS version recommended)
 - No external dependencies required - uses built-in Node.js modules!
 
 ### Installation & Running

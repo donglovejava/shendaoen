@@ -40,6 +40,13 @@ const knowledgeBase = [
 
 let nextId = 4;
 
+// Constants
+const MAX_BODY_SIZE = 1024 * 1024; // 1MB limit for request body
+const IMPACT_LEVELS = {
+  HIGH: '高',
+  CRITICAL: '关键'
+};
+
 // Server configuration
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
@@ -334,14 +341,52 @@ function handleRequest(req, res) {
   else if (pathname === '/api/articles' && method === 'POST') {
     // Create new article
     let body = '';
+    let bodySize = 0;
+    
     req.on('data', chunk => {
+      bodySize += chunk.length;
+      
+      // Prevent memory exhaustion attacks
+      if (bodySize > MAX_BODY_SIZE) {
+        res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'Request body too large' }));
+        req.destroy();
+        return;
+      }
+      
       body += chunk.toString();
     });
+    
     req.on('end', () => {
       try {
         const newArticle = JSON.parse(body);
+        
+        // Validate required fields
+        if (!newArticle.title || typeof newArticle.title !== 'string' || newArticle.title.trim() === '') {
+          sendJSON(res, 400, { success: false, error: 'Title is required and must be a non-empty string' });
+          return;
+        }
+        if (!newArticle.content || typeof newArticle.content !== 'string' || newArticle.content.trim() === '') {
+          sendJSON(res, 400, { success: false, error: 'Content is required and must be a non-empty string' });
+          return;
+        }
+        if (!newArticle.category || typeof newArticle.category !== 'string' || newArticle.category.trim() === '') {
+          sendJSON(res, 400, { success: false, error: 'Category is required and must be a non-empty string' });
+          return;
+        }
+        if (!newArticle.impact || typeof newArticle.impact !== 'string' || newArticle.impact.trim() === '') {
+          sendJSON(res, 400, { success: false, error: 'Impact is required and must be a non-empty string' });
+          return;
+        }
+        
+        // Sanitize inputs
+        newArticle.title = newArticle.title.trim();
+        newArticle.content = newArticle.content.trim();
+        newArticle.category = newArticle.category.trim();
+        newArticle.impact = newArticle.impact.trim();
+        
         newArticle.id = nextId++;
-        newArticle.author = newArticle.author || '匿名';
+        newArticle.author = newArticle.author?.trim() || '匿名';
         knowledgeBase.push(newArticle);
         sendJSON(res, 201, { 
           success: true, 
@@ -359,7 +404,9 @@ function handleRequest(req, res) {
     const stats = {
       totalArticles: knowledgeBase.length,
       categories: [...new Set(knowledgeBase.map(a => a.category))],
-      highImpactArticles: knowledgeBase.filter(a => a.impact === '高' || a.impact === '关键').length,
+      highImpactArticles: knowledgeBase.filter(a => 
+        a.impact === IMPACT_LEVELS.HIGH || a.impact === IMPACT_LEVELS.CRITICAL
+      ).length,
       mission: "Democratizing knowledge to transform the world"
     };
     sendJSON(res, 200, { success: true, data: stats });
