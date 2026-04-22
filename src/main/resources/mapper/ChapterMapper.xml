@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.neusoft.springbookdemo.mapper.ChapterMapper">
+
+    <select id="findByCourse" resultType="Chapter">
+        SELECT * FROM chapter WHERE course_id = #{courseId} ORDER BY sort_order, id
+    </select>
+
+    <select id="findById" resultType="Chapter">
+        SELECT * FROM chapter WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Chapter" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chapter(course_id, title, sort_order, video_path, ppt_path)
+        VALUES(#{courseId}, #{title}, #{sortOrder}, #{videoPath}, #{pptPath})
+    </insert>
+
+    <update id="update" parameterType="Chapter">
+        UPDATE chapter
+        SET title = #{title}, sort_order = #{sortOrder},
+            video_path = #{videoPath}, ppt_path = #{pptPath}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM chapter WHERE id = #{id}
+    </delete>
+</mapper>

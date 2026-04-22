@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${course.title}">课程详情</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .chapter-list { list-style: none; }
+        .chapter-list li { padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .chapter-list li:last-child { border: none; }
+        .chapter-list a { color: #667eea; text-decoration: none; }
+        .tag { background: #eef; color: #667eea; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info"><a href="/courses">返回课程列表</a></div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3 th:text="${course.title}">课程名</h3>
+        <p style="color:#666;margin-top:10px;" th:text="${course.description}">课程简介</p>
+    </div>
+    <div class="card">
+        <h3>章节</h3>
+        <ul class="chapter-list">
+            <li th:each="ch : ${chapters}">
+                <div>
+                    <a th:href="@{/chapters/{id}(id=${ch.id})}" th:text="${ch.title}">章节名</a>
+                    <span class="tag" th:if="${ch.videoPath}">视频</span>
+                    <span class="tag" th:if="${ch.pptPath}">PPT</span>
+                </div>
+                <small style="color:#aaa;">#<span th:text="${ch.sortOrder}">0</span></small>
+            </li>
+            <li th:if="${#lists.isEmpty(chapters)}"><span style="color:#888;">暂无章节</span></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

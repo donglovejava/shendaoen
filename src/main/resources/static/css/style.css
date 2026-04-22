@@ -1,0 +1,74 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.auth-box {
+    max-width: 400px;
+    margin: 80px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.15);
+}
+.auth-box h1 { font-size: 24px; margin-bottom: 8px; color: #333; }
+.auth-box .subtitle { color: #888; margin-bottom: 28px; font-size: 14px; }
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; }
+.form-group input {
+    width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+    border-radius: 6px; font-size: 14px; transition: border .2s;
+}
+.form-group input:focus { border-color: #667eea; outline: none; }
+.btn {
+    width: 100%; padding: 11px; border: none; border-radius: 6px;
+    background: #667eea; color: #fff; font-size: 15px; cursor: pointer;
+    transition: background .2s;
+}
+.btn:hover { background: #5568d3; }
+.btn-secondary {
+    display: inline-block;
+    padding: 9px 18px;
+    border-radius: 6px;
+    border: 1px solid #667eea;
+    color: #667eea;
+    background: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+.btn-secondary:hover { background: #f3f4ff; }
+.alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+.alert-error { background: #fee; color: #c33; border: 1px solid #fcc; }
+.alert-success { background: #efe; color: #2a7; border: 1px solid #cfc; }
+.text-link { text-align: center; margin-top: 16px; font-size: 13px; color: #666; }
+.text-link a { color: #667eea; text-decoration: none; }
+
+/* 首页 */
+.navbar {
+    background: #fff; padding: 14px 32px; display: flex;
+    justify-content: space-between; align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.navbar h2 { color: #667eea; font-size: 18px; }
+.navbar .user-info { font-size: 14px; color: #555; }
+.navbar .user-info a { color: #667eea; text-decoration: none; margin-left: 12px; }
+.navbar .user-info a:hover { text-decoration: underline; }
+.card {
+    background: #fff; border-radius: 10px; padding: 24px;
+    margin-top: 20px; box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+.card h3 { margin-bottom: 12px; color: #333; }
+.badge {
+    display: inline-block; padding: 3px 10px; border-radius: 10px;
+    font-size: 12px; background: #667eea; color: #fff;
+}
+
+@media (max-width: 768px) {
+    .container { padding: 14px; }
+    .navbar { padding: 12px 14px; }
+    .auth-box { margin: 24px auto; padding: 24px; }
+    .card { padding: 16px; }
+}

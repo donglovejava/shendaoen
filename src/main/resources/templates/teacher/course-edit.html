@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${course.title} + ' - 管理'">课程管理</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9f9fb; font-size: 13px; color: #666; }
+        .btn-danger { padding: 4px 10px; background: #f56565; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .tag { background: #eef; color: #667eea; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+        .inline-form { display: inline; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info"><a href="/teacher/courses">返回我的课程</a></div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3 th:text="${course.title}">课程</h3>
+        <p style="color:#666;margin-top:6px;" th:text="${course.description}">简介</p>
+    </div>
+
+    <div class="alert alert-error" th:if="${error}" th:text="${error}" style="margin-top:16px;"></div>
+
+    <div class="card">
+        <h3>📍 发起签到</h3>
+        <p style="color:#888;font-size:13px;margin:8px 0 14px;">生成 6 位数字码，默认有效 5 分钟；学生到「签到」页输入即可。</p>
+        <form method="post" th:action="@{/teacher/courses/{id}/checkin(id=${course.id})}" class="inline-form">
+            <label style="font-size:13px;color:#555;">有效分钟数（选填，默认 5）</label>
+            <input type="number" name="minutes" min="1" max="120" placeholder="5"
+                   style="width:100px;margin:0 12px;padding:8px;border:1px solid #ddd;border-radius:6px;">
+            <button type="submit" class="btn" style="width:auto;padding:9px 20px;display:inline-block;">发起签到</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>➕ 新增章节</h3>
+        <form method="post" enctype="multipart/form-data"
+              th:action="@{/teacher/courses/{id}/chapters(id=${course.id})}"
+              style="margin-top:14px;">
+            <div class="form-group">
+                <label>章节标题</label>
+                <input type="text" name="title" required>
+            </div>
+            <div class="form-group">
+                <label>排序</label>
+                <input type="number" name="sortOrder" value="0">
+            </div>
+            <div class="form-group">
+                <label>视频文件（选填）</label>
+                <input type="file" name="video" accept="video/*">
+            </div>
+            <div class="form-group">
+                <label>课件 / PPT / PDF（选填）</label>
+                <input type="file" name="ppt" accept=".pdf,.ppt,.pptx,.doc,.docx">
+            </div>
+            <button class="btn" type="submit" style="width:auto;padding:9px 24px;">创建章节</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>📋 章节列表</h3>
+        <table style="margin-top:12px;">
+            <thead><tr><th>#</th><th>标题</th><th>资源</th><th>操作</th></tr></thead>
+            <tbody>
+                <tr th:each="ch : ${chapters}">
+                    <td th:text="${ch.sortOrder}">0</td>
+                    <td th:text="${ch.title}">标题</td>
+                    <td>
+                        <span class="tag" th:if="${ch.videoPath}">视频</span>
+                        <span class="tag" th:if="${ch.pptPath}">PPT</span>
+                    </td>
+                    <td>
+                        <form class="inline-form" method="post"
+                              th:action="@{/teacher/chapters/{id}/delete(id=${ch.id})}"
+                              onsubmit="return confirm('确认删除该章节？');">
+                            <input type="hidden" name="courseId" th:value="${course.id}">
+                            <button class="btn-danger" type="submit">删除</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(chapters)}">
+                    <td colspan="4" style="text-align:center;color:#888;">暂无章节</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

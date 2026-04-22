@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>签到</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info"><a href="/home">返回首页</a></div>
+</nav>
+<div class="container">
+    <div class="auth-box" style="margin-top:40px;">
+        <h1>课堂签到</h1>
+        <p class="subtitle">输入教师公布的 6 位签到码</p>
+
+        <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+        <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+        <form method="post" action="/checkin">
+            <div class="form-group">
+                <label>签到码</label>
+                <input type="text" name="code" required maxlength="10" pattern="[0-9]{6}"
+                       placeholder="例如 123456" autocomplete="off">
+            </div>
+            <button class="btn" type="submit">确认签到</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

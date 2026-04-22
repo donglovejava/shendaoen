@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.neusoft.springbookdemo.mapper.CheckinMapper">
+
+    <insert id="insertCheckin" parameterType="Checkin" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO checkin(course_id, teacher_id, code, start_time, end_time)
+        VALUES(#{courseId}, #{teacherId}, #{code}, #{startTime}, #{endTime})
+    </insert>
+
+    <select id="findActiveByCode" resultType="Checkin">
+        SELECT * FROM checkin WHERE code = #{code} AND end_time &gt; #{now}
+        ORDER BY id DESC LIMIT 1
+    </select>
+
+    <select id="findById" resultType="Checkin">
+        SELECT * FROM checkin WHERE id = #{id}
+    </select>
+
+    <select id="findByCourse" resultType="Checkin">
+        SELECT * FROM checkin WHERE course_id = #{courseId} ORDER BY id DESC
+    </select>
+
+    <insert id="insertRecord" parameterType="CheckinRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO checkin_record(checkin_id, user_id) VALUES(#{checkinId}, #{userId})
+    </insert>
+
+    <select id="countRecord" resultType="int">
+        SELECT COUNT(*) FROM checkin_record WHERE checkin_id = #{checkinId}
+    </select>
+
+    <select id="countTodayDistinctUsers" resultType="int">
+        SELECT COUNT(DISTINCT user_id) FROM checkin_record
+        WHERE checkin_time &gt;= #{start} AND checkin_time &lt; #{end}
+    </select>
+
+    <select id="findRecordsByUser" resultType="CheckinRecord">
+        SELECT * FROM checkin_record WHERE user_id = #{userId} ORDER BY id DESC
+    </select>
+</mapper>

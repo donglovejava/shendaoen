@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册 - 智慧教育平台</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-box">
+    <h1>注册新账号</h1>
+    <p class="subtitle">注册后默认为学生身份</p>
+
+    <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+
+    <form method="post" action="/register">
+        <div class="form-group">
+            <label>用户名（3-50 位）</label>
+            <input type="text" name="username" required minlength="3" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label>密码（不少于 6 位）</label>
+            <input type="password" name="password" required minlength="6">
+        </div>
+        <div class="form-group">
+            <label>昵称（选填）</label>
+            <input type="text" name="nickname" maxlength="50">
+        </div>
+        <button class="btn" type="submit">注 册</button>
+    </form>
+    <p class="text-link">已有账号？<a href="/login">去登录</a></p>
+</div>
+</body>
+</html>

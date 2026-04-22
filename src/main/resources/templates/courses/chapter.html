@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${chapter.title}">章节</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        video { width: 100%; max-width: 900px; border-radius: 8px; background: #000; }
+        .btn-download {
+            display: inline-block; padding: 8px 18px; background: #667eea; color: #fff;
+            border-radius: 6px; text-decoration: none; font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info">
+        <a th:href="@{/courses/{id}(id=${course.id})}">返回课程</a>
+    </div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3 th:text="${chapter.title}">章节</h3>
+        <p style="color:#888;font-size:13px;margin-top:4px;">
+            所属课程：<span th:text="${course.title}"></span>
+        </p>
+    </div>
+
+    <div class="card" th:if="${chapter.videoPath}">
+        <h3>🎬 视频</h3>
+        <video controls th:src="@{'/files/' + ${chapter.videoPath}}">你的浏览器不支持视频播放</video>
+    </div>
+    <div class="card" th:unless="${chapter.videoPath}">
+        <h3>🎬 视频</h3>
+        <p style="color:#888;">本章节未上传视频</p>
+    </div>
+
+    <div class="card" th:if="${chapter.pptPath}">
+        <h3>📄 课件 / PPT</h3>
+        <a class="btn-download" th:href="@{'/files/' + ${chapter.pptPath}}" target="_blank">下载课件</a>
+    </div>
+</div>
+</body>
+</html>

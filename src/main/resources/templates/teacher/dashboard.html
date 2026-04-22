@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>教师仪表盘</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .kpi { font-size: 36px; color: #667eea; font-weight: 700; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9f9fb; font-size: 13px; color: #666; }
+        .muted { color: #888; font-size: 13px; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info"><a href="/teacher/courses">我的课程</a></div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3>📊 今日签到人数</h3>
+        <p class="muted">每 5 秒自动刷新，最近更新时间：<span id="lastRefreshAt">--</span></p>
+        <div class="kpi" id="todayCheckinUsers" th:text="${todayCheckinUsers}">0</div>
+    </div>
+
+    <div class="card">
+        <h3>🏆 学生总分排行榜 TOP 10</h3>
+        <table style="margin-top:12px;">
+            <thead>
+            <tr><th>排名</th><th>用户名</th><th>昵称</th><th>总分</th></tr>
+            </thead>
+            <tbody id="topStudentsBody">
+            <tr th:each="u, stat : ${topStudents}">
+                <td th:text="${stat.count}">1</td>
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.nickname}"></td>
+                <td th:text="${u.totalScore}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(topStudents)}">
+                <td colspan="4" style="text-align:center;color:#888;">暂无数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll("\"", "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    async function refreshDashboard() {
+        try {
+            const resp = await fetch("/api/teacher/dashboard/summary", {credentials: "same-origin"});
+            if (!resp.ok) return;
+            const json = await resp.json();
+            if (!json || json.code !== 0 || !json.data) return;
+
+            document.getElementById("todayCheckinUsers").textContent = json.data.todayCheckinUsers ?? 0;
+            document.getElementById("lastRefreshAt").textContent = new Date().toLocaleTimeString();
+            const list = json.data.topStudents || [];
+            const tbody = document.getElementById("topStudentsBody");
+            if (!tbody) return;
+
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;">暂无数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map((u, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td>${escapeHtml(u.username)}</td>
+                    <td>${escapeHtml(u.nickname)}</td>
+                    <td>${u.totalScore ?? 0}</td>
+                </tr>
+            `).join("");
+        } catch (_) {
+            // 忽略瞬时网络抖动，下一轮轮询会自动恢复
+        }
+    }
+
+    setInterval(refreshDashboard, 5000);
+</script>
+</body>
+</html>

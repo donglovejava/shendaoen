@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - 智慧教育平台</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <h2>智慧教育平台</h2>
+    <div class="user-info">
+        欢迎，<b th:text="${user.nickname}">昵称</b>
+        <span class="badge" th:text="${user.role}">ROLE</span>
+        <a href="/logout"
+           onclick="event.preventDefault();document.getElementById('logoutForm').submit();">退出</a>
+        <form id="logoutForm" method="post" action="/logout" style="display:none"></form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h3>👋 你好，<span th:text="${user.nickname}">学习者</span></h3>
+        <p>当前累计得分：<b th:text="${user.totalScore}">0</b> 分</p>
+        <p style="margin-top:8px; color:#888; font-size:13px;">
+            账号：<span th:text="${user.username}"></span> ·
+            角色：<span th:text="${user.role}"></span>
+        </p>
+    </div>
+
+    <div class="card" sec:authorize="hasAnyRole('STUDENT','ADMIN')">
+        <h3>📚 学生功能</h3>
+        <ul style="padding-left: 20px; line-height: 2;">
+            <li><a href="/courses">浏览课程 / 看视频 / 下载 PPT</a></li>
+            <li><a href="/checkin">签到码签到</a></li>
+            <li><a href="/scores">我的得分记录</a></li>
+        </ul>
+    </div>
+
+    <div class="card" sec:authorize="hasRole('TEACHER')">
+        <h3>👨‍🏫 教师功能</h3>
+        <ul style="padding-left: 20px; line-height: 2;">
+            <li><a href="/teacher/courses">我的课程管理（新建课程、上传视频与 PPT）</a></li>
+            <li><a href="/courses">浏览全部课程</a></li>
+            <li>发起签到：进入某门课的「管理」页，使用「发起签到」</li>
+            <li><a href="/teacher/dashboard">实时查看签到人数与得分排行</a></li>
+        </ul>
+    </div>
+
+    <div class="card" sec:authorize="hasRole('ADMIN')">
+        <h3>🛠️ 管理员功能（开发中）</h3>
+        <ul style="padding-left: 20px; line-height: 2;">
+            <li>用户管理</li>
+            <li>全局数据面板</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

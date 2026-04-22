@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的得分记录</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9f9fb; font-size: 13px; color: #666; }
+        .score-plus { color: #16a34a; font-weight: 700; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info"><a href="/home">返回首页</a></div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3>🏅 我的得分</h3>
+        <p style="color:#666;margin-top:8px;">
+            当前总分：<b th:text="${user.totalScore}">0</b>
+        </p>
+    </div>
+    <div class="card">
+        <h3>📜 得分流水</h3>
+        <table style="margin-top:12px;">
+            <thead>
+            <tr><th>时间</th><th>来源</th><th>说明</th><th>分值</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${records}">
+                <td th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+                    <span th:switch="${r.source}">
+                        <span th:case="'CHECKIN'">签到</span>
+                        <span th:case="'STUDY'">学习</span>
+                        <span th:case="'MANUAL'">教师加分</span>
+                        <span th:case="*">其他</span>
+                    </span>
+                </td>
+                <td th:text="${r.remark}"></td>
+                <td class="score-plus" th:text="${'+' + r.score}">+10</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(records)}">
+                <td colspan="4" style="text-align:center;color:#888;">暂无得分记录</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

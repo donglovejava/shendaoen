@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>签到已发起</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .code-box {
+            font-size: 42px; letter-spacing: 12px; font-weight: bold;
+            text-align: center; padding: 24px; background: #f3f4ff;
+            border-radius: 10px; color: #667eea; margin: 20px 0;
+        }
+        .meta { color: #666; font-size: 14px; line-height: 1.8; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2><a href="/home" style="color:#667eea;text-decoration:none;">智慧教育平台</a></h2>
+    <div class="user-info">
+        <a th:href="@{/teacher/courses/{id}(id=${courseId})}">返回课程管理</a>
+    </div>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3>✅ 签到已发起</h3>
+        <p class="meta">请让学生在本页显示的<strong>6 位签到码</strong>有效期内，到「签到」页面输入签到。</p>
+        <div class="code-box" th:text="${checkin.code}">123456</div>
+        <div class="meta">
+            <p>有效期至：<span th:text="${#temporals.format(checkin.endTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+            <p>课程 ID：<span th:text="${checkin.courseId}"></span></p>
+        </div>
+        <p style="margin-top:20px;">
+            <a class="btn" th:href="@{/teacher/courses/{id}(id=${courseId})}"
+               style="display:inline-block;width:auto;padding:10px 24px;text-decoration:none;text-align:center;">返回课程管理</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
